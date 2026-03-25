@@ -96,6 +96,16 @@ This project was built as part of a guided tutorial and extended with additional
 
 ---
 
+⚠️ **Security Notice:**  
+
+The passwords in this project (e.g., `admin123`) are **for testing only**.  
+**Never use these in production.**  
+
+💡 **Best Practices:**  
+- Do **not** commit real passwords or secrets to version control.  
+- Use **environment variables** or a **secure secrets manager** for database credentials and other sensitive information.  
+- Update all configuration files with strong, unique passwords before deploying.  
+
 ## 📸 Future Improvements
 
 * Containerize the application using Docker
