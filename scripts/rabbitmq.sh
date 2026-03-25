@@ -1,18 +1,66 @@
 #!/bin/bash
-sudo yum install epel-release -y
-sudo yum update -y
-sudo yum install wget -y
-cd /tmp/
+
+# ==========================================
+# RabbitMQ Setup Script
+# Installs and configures message broker
+# ==========================================
+
+# ==========================================
+# INSTALLATION
+# ==========================================
+
+# Install required dependencies
+yum install epel-release -y
+yum update -y
+yum install wget -y
+
+# Add RabbitMQ repository
 dnf -y install centos-release-rabbitmq-38
- dnf --enablerepo=centos-rabbitmq-38 -y install rabbitmq-server
- systemctl enable --now rabbitmq-server
- firewall-cmd --add-port=5672/tcp
- firewall-cmd --runtime-to-permanent
-sudo systemctl start rabbitmq-server
-sudo systemctl enable rabbitmq-server
-sudo systemctl status rabbitmq-server
-sudo sh -c 'echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config'
-sudo rabbitmqctl add_user test test
-sudo rabbitmqctl set_user_tags test administrator
+
+# Install RabbitMQ server
+dnf --enablerepo=centos-rabbitmq-38 -y install rabbitmq-server
+
+
+# ==========================================
+# SERVICE MANAGEMENT
+# ==========================================
+
+# Enable and start RabbitMQ
+systemctl enable --now rabbitmq-server
+
+# Verify service status
+systemctl status rabbitmq-server
+
+
+# ==========================================
+# FIREWALL CONFIGURATION
+# ==========================================
+
+# Open RabbitMQ port (5672)
+firewall-cmd --add-port=5672/tcp
+firewall-cmd --runtime-to-permanent
+
+
+# ==========================================
+# CONFIGURATION
+# ==========================================
+
+# Allow remote connections (disable loopback restriction)
+echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
+
+# Create user and assign admin privileges
+rabbitmqctl add_user test test
+rabbitmqctl set_user_tags test administrator
+
+# Grant full permissions
 rabbitmqctl set_permissions -p / test ".*" ".*" ".*"
-sudo systemctl restart rabbitmq-server
+
+
+# ==========================================
+# FINAL STEP
+# ==========================================
+
+# Restart service to apply configuration
+systemctl restart rabbitmq-server
+
+echo "RabbitMQ setup completed successfully!"
